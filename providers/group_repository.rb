@@ -17,11 +17,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+use_inline_resources
 
 def load_current_resource
   @current_resource = Chef::Resource::NexusGroupRepository.new(new_resource.name)
 
-  run_context.include_recipe "nexus::cli"
+  run_context.include_recipe 'nexus::cli'
   Chef::Nexus.ensure_nexus_available(node)
 
   @parsed_id         = Chef::Nexus.parse_identifier(new_resource.name)
@@ -61,16 +62,14 @@ action :remove_from do
 end
 
 private
-  
-  def group_repository_exists?(name)
-    begin
-      Chef::Nexus.nexus(node).get_group_repository(name)
-      true
-    rescue NexusCli::RepositoryNotFoundException => e
-      return false
-    end
-  end
 
-  def repository_in_group?(repository_name, repository_to_check)
-    Chef::Nexus.nexus(node).repository_in_group?(repository_name, repository_to_check)
-  end
+def group_repository_exists?(name)
+  Chef::Nexus.nexus(node).get_group_repository(name)
+  true
+rescue NexusCli::RepositoryNotFoundException => e
+  return false
+end
+
+def repository_in_group?(repository_name, repository_to_check)
+  Chef::Nexus.nexus(node).repository_in_group?(repository_name, repository_to_check)
+end

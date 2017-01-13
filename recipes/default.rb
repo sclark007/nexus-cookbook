@@ -18,11 +18,11 @@
 # limitations under the License.
 #
 
-if node[:nexus][:use_chef_vault]
-  chef_gem "chef-vault"
+if node['nexus']['use_chef_vault']
+  chef_gem 'chef-vault'
   require 'chef-vault'
 end
 
-include_recipe "nexus::cli"
-include_recipe "nexus::app"
-include_recipe "nexus::app_server_proxy"
+include_recipe 'nexus::cli'
+include_recipe 'nexus::app'
+include_recipe 'nexus::app_server_proxy'

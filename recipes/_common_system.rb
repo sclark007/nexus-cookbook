@@ -17,22 +17,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-user_home = ::File.join(node[:nexus][:base_dir], node[:nexus][:user])
+user_home = ::File.join(node['nexus']['base_dir'], node['nexus']['user'])
 
-group node[:nexus][:group] do
+group node['nexus']['group'] do
   system true
 end
 
-user node[:nexus][:group] do
-  gid    node[:nexus][:group]
-  shell  "/bin/bash"
+user node['nexus']['group'] do
+  gid    node['nexus']['group']
+  shell  '/bin/bash'
   home   user_home
   system true
 end
 
 directory user_home do
-  owner  node[:nexus][:user]
-  group  node[:nexus][:group]
-  mode   "0755"
+  owner  node['nexus']['user']
+  group  node['nexus']['group']
+  mode   '0755'
   action :create
 end

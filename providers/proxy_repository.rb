@@ -17,11 +17,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+use_inline_resources
 
 def load_current_resource
   @current_resource = Chef::Resource::NexusProxyRepository.new(new_resource.name)
 
-  run_context.include_recipe "nexus::cli"
+  run_context.include_recipe 'nexus::cli'
   Chef::Nexus.ensure_nexus_available(node)
 
   @parsed_id = Chef::Nexus.parse_identifier(new_resource.name)
@@ -63,28 +64,26 @@ action :update do
 end
 
 private
-  
-  def set_publisher
-    Chef::Nexus.nexus(node).enable_artifact_publish(@parsed_id)
-  end
 
-  def unset_publisher
-    Chef::Nexus.nexus(node).disable_artifact_publish(@parsed_id)
-  end
+def set_publisher
+  Chef::Nexus.nexus(node).enable_artifact_publish(@parsed_id)
+end
 
-  def set_subscriber
-    Chef::Nexus.nexus(node).enable_artifact_subscribe(@parsed_id, new_resource.preemptive_fetch)
-  end
+def unset_publisher
+  Chef::Nexus.nexus(node).disable_artifact_publish(@parsed_id)
+end
 
-  def unset_subscriber
-    Chef::Nexus.nexus(node).disable_artifact_subscribe(@parsed_id)
-  end
+def set_subscriber
+  Chef::Nexus.nexus(node).enable_artifact_subscribe(@parsed_id, new_resource.preemptive_fetch)
+end
 
-  def repository_exists?(name)
-    begin
-      Chef::Nexus.nexus(node).get_repository_info(name)
-      true
-    rescue NexusCli::RepositoryNotFoundException => e
-      return false
-    end
-  end
+def unset_subscriber
+  Chef::Nexus.nexus(node).disable_artifact_subscribe(@parsed_id)
+end
+
+def repository_exists?(name)
+  Chef::Nexus.nexus(node).get_repository_info(name)
+  true
+rescue NexusCli::RepositoryNotFoundException => e
+  return false
+end
